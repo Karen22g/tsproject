@@ -1,0 +1,1538 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Modelos autorregresivo integrado de media móvil &#8212; Proyecto final</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'arima';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Modelos de redes neuronales" href="nn.html" />
+    <link rel="prev" title="Modelos de Suavización Exponencial" href="smoothing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Proyecto final</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Proyecto Final - Series de Tiempo 202430
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="data_prep.html">Análisis cualitativo y preparación de la base de datos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">Análisis exploratorio de la Serie de Tiempo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smoothing.html">Modelos de Suavización Exponencial</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Modelos autorregresivo integrado de media móvil</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">Modelos de redes neuronales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="improved_model.html">Modelo mejorado para pronóstico de serie de tiempo</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Farima.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/arima.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Modelos autorregresivo integrado de media móvil</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arima">1. ARIMA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sarima">2. SARIMA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados">4. Resultados</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-en-el-entrenamiento-de-los-modelos">4.1 Resultados en el entrenamiento de los modelos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-en-el-conjunto-de-test">4.2 Resultados en el conjunto de test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seleccion-del-mejor-modelo">4.3 Selección del mejor modelo</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#paquetes utilizados</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.holtwinters</span> <span class="kn">import</span> <span class="n">SimpleExpSmoothing</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">acorr_ljungbox</span><span class="p">,</span> <span class="n">het_breuschpagan</span><span class="p">,</span> <span class="n">het_arch</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tools.sm_exceptions</span> <span class="kn">import</span> <span class="n">ConvergenceWarning</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">ConvergenceWarning</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.holtwinters</span> <span class="kn">import</span> <span class="n">ExponentialSmoothing</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.arima_model</span> <span class="kn">import</span> <span class="n">ARIMA</span>
+<span class="kn">import</span> <span class="nn">statsmodels.tsa.api</span> <span class="k">as</span> <span class="nn">smtsa</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.seasonal</span> <span class="kn">import</span> <span class="n">seasonal_decompose</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa</span> <span class="kn">import</span> <span class="n">seasonal</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">r2_score</span>
+<span class="kn">from</span> <span class="nn">arch</span> <span class="kn">import</span> <span class="n">arch_model</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">acorr_ljungbox</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.stattools</span> <span class="kn">import</span> <span class="n">jarque_bera</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_acf</span><span class="p">,</span> <span class="n">plot_pacf</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">adfuller</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="modelos-autorregresivo-integrado-de-media-movil">
+<h1>Modelos autorregresivo integrado de media móvil<a class="headerlink" href="#modelos-autorregresivo-integrado-de-media-movil" title="Link to this heading">#</a></h1>
+<p>Apliquemos a continuación Modelos Autorregresivo Integrado de Media Móvil (ARIMA) a nuestra serie de tiempo, para conocer el comportamiento del pronóstico que se puede alcanzar a partir de estos. En este apartado estaremos aplicando:</p>
+<ol class="arabic simple">
+<li><p>ARIMA</p></li>
+<li><p>SARIMA</p></li>
+</ol>
+<p>Durante el análisis se estarán construyendo modelos para distintas combinaciones de autorregresivos, medias móviles y estacionalidades. Además para todos los pronósticos se considerará la técnica ‘Rolling’ que permite actualizar el modelo a medida que una nueva observación es conocida, lo que permite tener un pronóstico actualizado en el tiempo.</p>
+<p>Cada una de los apartados a continuación incluyen funciones de creación, selección de mejor modelo y pronóstico. Carguemos los datos:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;loadsts.xlsx&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Posted_date&#39;</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">freq</span> <span class="o">=</span> <span class="s1">&#39;D&#39;</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Loads&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>También carguemos las funciones que ya hemos utilizado anteriormente para el cálculo de los score de pronóstico, supuestos y separación de la serie de tiempo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="n">serie</span><span class="p">,</span> <span class="n">trainportion</span><span class="p">):</span>
+    <span class="n">perct</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span> <span class="o">*</span> <span class="n">trainportion</span><span class="p">)</span>
+    <span class="n">perc2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">trainportion</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="n">serie</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">perct</span><span class="p">]</span>
+    <span class="n">validation</span> <span class="o">=</span> <span class="n">serie</span><span class="p">[</span><span class="n">perct</span><span class="p">:</span><span class="n">perct</span><span class="o">+</span><span class="n">perc2</span><span class="p">]</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">serie</span><span class="p">[</span><span class="n">perct</span><span class="o">+</span><span class="n">perc2</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">test</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#calculo de los errores</span>
+<span class="k">def</span> <span class="nf">errors</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_real</span><span class="p">):</span>
+    
+    <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_real</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">mape</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(((</span><span class="n">y_real</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">/</span><span class="n">y_real</span><span class="p">)))</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">y_real</span><span class="p">))</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_real</span> <span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_real</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">mae</span><span class="p">,</span> <span class="n">mape</span><span class="p">,</span> <span class="n">mse</span><span class="p">,</span> <span class="n">rmse</span><span class="p">,</span> <span class="n">r2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#evaluacion de supuestos</span>
+<span class="k">def</span> <span class="nf">assumptions</span><span class="p">(</span><span class="n">residuals</span><span class="p">):</span>
+
+    <span class="n">warning</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1">#Independency</span>
+    <span class="c1">#H0: The residuals are independent.</span>
+    <span class="c1">#H1: The residuals aren&#39;t independent.    </span>
+    <span class="n">ljung_box_test</span> <span class="o">=</span> <span class="n">acorr_ljungbox</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">return_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ljung_box_pvalue</span> <span class="o">=</span> <span class="n">ljung_box_test</span><span class="p">[</span><span class="s1">&#39;lb_pvalue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">ljung_box_pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="n">warning</span><span class="o">=</span> <span class="n">warning</span> <span class="o">+</span> <span class="s2">&quot; The residuals aren&#39;t independent&quot;</span>
+        <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="c1">#Normality test</span>
+    <span class="c1">#H0: The residuals have a normal distribution.</span>
+    <span class="c1">#H1: The residuals don&#39;t have a normal distribution.</span>
+    <span class="n">jb_stat</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">skewness</span><span class="p">,</span> <span class="n">kurtosis</span> <span class="o">=</span> <span class="n">jarque_bera</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">jb_pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="mi">1</span>
+        <span class="n">warning</span> <span class="o">=</span> <span class="n">warning</span> <span class="o">+</span> <span class="s2">&quot; The residuals do not follow a normal distribution&quot;</span>
+
+    <span class="c1">#homocedasticity</span>
+    <span class="c1">#H0: The residuals are homocedastic.</span>
+    <span class="c1">#H1: The residuals aren&#39;t homocedastic.</span>
+    <span class="n">arch_stat</span><span class="p">,</span> <span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">het_arch</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arch_pvalue</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="n">warning</span><span class="o">=</span> <span class="n">warning</span> <span class="o">+</span> <span class="s2">&quot; The residuals aren&#39;t homocedastic&quot;</span>
+        <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Para la construcción de los modelos ARIMA, utilizaremos 80% para el conjunto de entrenamiento. Dado que haremos pronóstico tipo rolling, probar modelos de alto orden con combinaciones de tipo p,q (3,3) supone alta disponibilidad computacional, y esto sucede no solo para testear validación sino para cada pronóstico del testing, y en cada observación el modelo se reentrena, esto lo hacemos para optimizar los tiempos de corrida del algoritmo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="arima">
+<h2>1. ARIMA<a class="headerlink" href="#arima" title="Link to this heading">#</a></h2>
+<p>Para generar el modelo ARIMA que pronostica con la técnica de ‘Rolling’ se hace uso de dos funciones:</p>
+<ol class="arabic simple">
+<li><p><em>arimaconrolling</em>: Esta función recibe los valores de p(AR), q(MA) y el set de training y testing. Para cada combinación p, q entrena el modelo usando la serie de tiempo de entrenamiento, pronostica el test y se encarga de guardar el valor de p y q con que se obtuvo el menor valor de error. Solo que en este caso el pronóstico se realiza a partir de la técnica de rolling, haciendo un llamado a la función del punto 2.</p></li>
+<li><p><em>arima_rolling</em>: Esta función calcula mediante rolling la cantidad de pasos de la serie de test que recibe. Luego de realizar cada pronóstico, esta función también reentrena el modelo para la combinación de p y q que recibe, porque actualiza la serie de tiempo input, agregando un valor real de la serie original de la variable de análisis.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## arima con rolling</span>
+<span class="c1">#obtener el mejor modelo</span>
+<span class="k">def</span> <span class="nf">arimaconrolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">ts_test</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mae_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ts_test</span><span class="p">)</span>
+    <span class="n">best_p</span><span class="p">,</span> <span class="n">best_q</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">best_mae</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">ari</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="c1">#p1</span>
+        <span class="k">for</span> <span class="n">maj</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="c1">#q</span>
+            <span class="n">arima_model</span> <span class="o">=</span> <span class="n">smtsa</span><span class="o">.</span><span class="n">ARIMA</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="n">ari</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">maj</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+            <span class="n">y_pred</span> <span class="o">=</span> <span class="n">arima_rolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">ts_test</span><span class="p">,</span> <span class="n">ari</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">maj</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combinacion&quot;</span><span class="p">,</span> <span class="n">ari</span><span class="p">,</span> <span class="n">maj</span><span class="p">)</span>
+            <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">ts_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+            <span class="n">residuals_m</span> <span class="o">=</span> <span class="n">arima_model</span><span class="o">.</span><span class="n">resid</span> <span class="c1">#obtención de residuales del modelo</span>
+            <span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span> <span class="o">=</span> <span class="n">assumptions</span><span class="p">(</span><span class="n">residuals_m</span><span class="p">)</span> <span class="c1">#análisis de los residuales</span>
+            
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obtuvo un mae de&quot;</span><span class="p">,</span> <span class="n">mae</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obtuvo este warning&quot;</span><span class="p">,</span> <span class="n">warning</span><span class="p">)</span>
+            <span class="n">mae_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mae</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">mae</span> <span class="o">&lt;</span> <span class="n">best_mae</span><span class="p">:</span>
+                <span class="n">best_p</span><span class="p">,</span> <span class="n">best_q</span><span class="p">,</span> <span class="n">best_mae</span> <span class="o">=</span> <span class="n">ari</span><span class="p">,</span> <span class="n">maj</span><span class="p">,</span> <span class="n">mae</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;el mejor mae es&quot;</span><span class="p">,</span> <span class="n">best_mae</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">best_q</span><span class="p">,</span> <span class="n">mae_list</span><span class="p">,</span> <span class="n">warnings</span>
+
+<span class="c1">## pronosticar con rolling</span>
+<span class="k">def</span> <span class="nf">arima_rolling</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">smtsa</span><span class="o">.</span><span class="n">ARIMA</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">order</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forecast</span><span class="p">()</span>
+        <span class="n">yhat</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yhat</span><span class="p">)</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Durante el capítulo de Análisis Exploratorio de Datos observamos que la serie no era estacionaria y que era necesario aplicar una diferenciación para poder seleccionar el Autorregresivo y Media Móvil con que vamos a construir nuestro modelo de ARIMA. Analicemos que valor de p (AR) y q (MA) podemos utilizar para entrenar el modelo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_diff</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">));</span>
+<span class="n">plot_pacf</span><span class="p">(</span><span class="n">train_diff</span><span class="o">.</span><span class="n">dropna</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 550x550 with 0 Axes&gt;
+</pre></div>
+</div>
+<img alt="_images/1da6cc5587432519c1381960fe2a4f41768cd5bd1ececa4548050f1972199a8b.png" src="_images/1da6cc5587432519c1381960fe2a4f41768cd5bd1ececa4548050f1972199a8b.png" />
+</div>
+</div>
+<p>En la gráfica PACF, observamos un patrón repetirse cada dos o tres lags. Sobre todo los primeros 6 lags sobrepasan la banda de significancia por mucho. Seleccionaremos entrenar nuestro modelo para 1, 2 y 3 valores de p. p igual a 0 no es considerado, porque conocemos a priori que debemos captar la relación entre los lags, no hacerlo puede suponer fallar en la prueba de independencia.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">));</span>
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">train_diff</span><span class="o">.</span><span class="n">dropna</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 550x550 with 0 Axes&gt;
+</pre></div>
+</div>
+<img alt="_images/b8340b6fea7b23c3176fede9102f37da7efb2aba5339f483d4945fc63c4f497e.png" src="_images/b8340b6fea7b23c3176fede9102f37da7efb2aba5339f483d4945fc63c4f497e.png" />
+</div>
+</div>
+<p>En este gráfico de ACF el comportamiento es aún más explícito en que cada dos y tres lags una barra sobrepasa la banda de significancia, de nuevo, puede estar relacionado con el comportamiento en cada día de la semana de las cargas transportadas. Para el valor de q también seleccionaremos entrenar el modelo ARIMA para 1, 2, 3 lags. q igual a 0 no es considerado, porque conocemos a priori que debemos captar la relación entre los lags, no hacerlo puede suponer fallar en la prueba de independencia.</p>
+<p>Además fijaremos el valor de d en el modelo como igual a 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#arima con rolling</span>
+
+<span class="n">best_p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">best_q</span><span class="p">,</span> <span class="n">mae_list</span><span class="p">,</span> <span class="n">warnings</span> <span class="o">=</span> <span class="n">arimaconrolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">#selección del mejor modelo</span>
+
+<span class="n">arima_model</span> <span class="o">=</span> <span class="n">smtsa</span><span class="o">.</span><span class="n">ARIMA</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="n">best_p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">best_q</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">residuals_m</span> <span class="o">=</span> <span class="n">arima_model</span><span class="o">.</span><span class="n">resid</span> <span class="c1">#obtención de residuales del modelo</span>
+<span class="n">val_pred</span> <span class="o">=</span> <span class="n">arima_rolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">best_p</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">best_q</span><span class="p">)</span> <span class="c1">#pronosticar validación</span>
+<span class="n">mae_v</span><span class="p">,</span> <span class="n">mape_v</span><span class="p">,</span> <span class="n">mse_v</span><span class="p">,</span> <span class="n">rmse_v</span><span class="p">,</span> <span class="n">r2_v</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">val_pred</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>  <span class="c1">#scores validación</span>
+<span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span> <span class="o">=</span> <span class="n">assumptions</span><span class="p">(</span><span class="n">residuals_m</span><span class="p">)</span> <span class="c1">#análisis de los residuales</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>A partir del entrenamiento del modelo ARIMA, distintas opciones de modelo para las distintas combinaciones se generaron. Podemos crear una tabla donde observemos mejor el comportamiento que cada uno tuvo, seleccionaremos un modelo que cumpla al menos el supuesto de independencia y que además haya alcanzado el mejor MAE.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">combs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">combs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">q</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arima_results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;comb&#39;</span><span class="p">:</span> <span class="n">combs</span><span class="p">,</span> <span class="s1">&#39;assumptions&#39;</span><span class="p">:</span> <span class="n">warnings</span><span class="p">,</span> <span class="s1">&#39;mae&#39;</span><span class="p">:</span> <span class="n">mae_list</span><span class="p">}</span>
+<span class="n">arima_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">arima_results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">arima_results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comb</th>
+      <th>assumptions</th>
+      <th>mae</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>(1.00, 1.00)</td>
+      <td>The residuals aren't independent The residual...</td>
+      <td>17.444868</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>(1.00, 2.00)</td>
+      <td>The residuals do not follow a normal distribu...</td>
+      <td>16.166223</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>(1.00, 3.00)</td>
+      <td>The residuals do not follow a normal distribu...</td>
+      <td>15.129966</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>(2.00, 1.00)</td>
+      <td>The residuals do not follow a normal distribu...</td>
+      <td>15.928835</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>(2.00, 2.00)</td>
+      <td>The residuals do not follow a normal distribu...</td>
+      <td>15.051051</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>(2.00, 3.00)</td>
+      <td>The residuals aren't independent The residual...</td>
+      <td>15.142134</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>(3.00, 1.00)</td>
+      <td>The residuals aren't homocedastic</td>
+      <td>16.028683</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>(3.00, 2.00)</td>
+      <td>The residuals do not follow a normal distribu...</td>
+      <td>15.770793</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>(3.00, 3.00)</td>
+      <td>The residuals aren't independent The residual...</td>
+      <td>14.097626</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Del anterior ciclo 9 modelos fueron evaluados. El de mejor desempeño en cuanto al MAE, fue el modelo (3,3) con un valor de 14 cargas de diferencia en el pronóstico. Es el menor MAE alcanzado hasta el momento, sin embargo, esta combinación contiene residuales que no cumplen el supuesto de independencia, es posible que existan aún correlaciones entre los residuos que no se logran modelar adecuadamente y los rezagos pueden afectar el pronóstico del modelo.</p>
+<p>Observamos además que varios de los modelos no cumplen el supuesto de homocedasticidad, aspecto que habíamos anticipado anteriormente. Existe alta variabilidad en el número de cargas diarias reservadas por esta empresa, lo que también afecta el supuesto de normalidad, sin embargo en este proyecto no buscamos calcular intervalos de confianza.</p>
+<p>Como mejor modelo ARIMA entonces seleccionaremos el modelo (2,2). Esto dado que con él alcanzamos el segundo mejor MAE de los calculados con aproximadamente una carga más de diferencia al modelo (3,3). Es probable, sin embargo, que con este modelo no obtengamos un resultado ideal, dado el supuesto de heterocedasticidad que no se cumple, ante horizontes largos de tiempo como el del test que tenemos planteado, podría tener una varianza que afecte el resultado considerablemente.</p>
+<p>Conociendo esta limitación, buscaríamos reducir el impacto de esta no homocedasticidad, con el uso de la técnica rolling.</p>
+<p>Guardemos los resultados para la validación de este modelo y calculemos otras métricas adicionales.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Modelo ARIMA con Rolling</span>
+
+<span class="n">arima_model</span> <span class="o">=</span> <span class="n">smtsa</span><span class="o">.</span><span class="n">ARIMA</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">residuals_m</span> <span class="o">=</span> <span class="n">arima_model</span><span class="o">.</span><span class="n">resid</span> <span class="c1">#obtención de residuales del modelo</span>
+<span class="n">val_pred</span> <span class="o">=</span> <span class="n">arima_rolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">#pronosticar validación</span>
+<span class="n">mae_v</span><span class="p">,</span> <span class="n">mape_v</span><span class="p">,</span> <span class="n">mse_v</span><span class="p">,</span> <span class="n">rmse_v</span><span class="p">,</span> <span class="n">r2_v</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">val_pred</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="c1">#scores validación</span>
+<span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span> <span class="o">=</span> <span class="n">assumptions</span><span class="p">(</span><span class="n">residuals_m</span><span class="p">)</span> <span class="c1">#análisis de los residuales</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\kgome\anaconda3\envs\myenv\lib\site-packages\statsmodels\tsa\statespace\sarimax.py:978: UserWarning: Non-invertible starting MA parameters found. Using zeros as starting parameters.
+  warn(&#39;Non-invertible starting MA parameters found.&#39;
+C:\Users\kgome\anaconda3\envs\myenv\lib\site-packages\statsmodels\tsa\statespace\sarimax.py:978: UserWarning: Non-invertible starting MA parameters found. Using zeros as starting parameters.
+  warn(&#39;Non-invertible starting MA parameters found.&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Analicemos el desempeño de este modelo para el pronóstico del conjunto de test.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#arima con rolling</span>
+<span class="n">val_result</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">test_result</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1">#forecast testing con arima</span>
+<span class="n">tt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">train</span><span class="p">,</span><span class="n">val</span><span class="p">])</span> <span class="c1">#unir validación con training</span>
+<span class="n">arima_model</span> <span class="o">=</span> <span class="n">smtsa</span><span class="o">.</span><span class="n">ARIMA</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">test_pred</span> <span class="o">=</span> <span class="n">arima_rolling</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">#pronosticar el testing</span>
+<span class="n">mae_t</span><span class="p">,</span> <span class="n">mape_t</span><span class="p">,</span> <span class="n">mse_t</span><span class="p">,</span> <span class="n">rmse_t</span><span class="p">,</span> <span class="n">r2_t</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">test_pred</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span> <span class="c1">#scores testing</span>
+
+<span class="n">val_result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;arima&quot;</span><span class="p">,</span> <span class="n">mape_v</span><span class="p">,</span> <span class="n">mae_v</span><span class="p">,</span> <span class="n">mse_v</span><span class="p">,</span> <span class="n">rmse_v</span><span class="p">,</span> <span class="n">r2_v</span><span class="p">,</span> <span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span><span class="p">])</span>
+<span class="n">test_result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;arima&quot;</span><span class="p">,</span> <span class="n">mape_t</span><span class="p">,</span> <span class="n">mae_t</span><span class="p">,</span> <span class="n">mse_t</span><span class="p">,</span> <span class="n">rmse_t</span><span class="p">,</span> <span class="n">r2_t</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\kgome\anaconda3\envs\myenv\lib\site-packages\statsmodels\tsa\statespace\sarimax.py:978: UserWarning: Non-invertible starting MA parameters found. Using zeros as starting parameters.
+  warn(&#39;Non-invertible starting MA parameters found.&#39;
+C:\Users\kgome\anaconda3\envs\myenv\lib\site-packages\statsmodels\tsa\statespace\sarimax.py:978: UserWarning: Non-invertible starting MA parameters found. Using zeros as starting parameters.
+  warn(&#39;Non-invertible starting MA parameters found.&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sarima">
+<h2>2. SARIMA<a class="headerlink" href="#sarima" title="Link to this heading">#</a></h2>
+<p>El modelo SARIMA además del componente de autorregresivo y media móvil que considera el modelo ARIMA, agrega el análisis de la componente estacional de la serie.</p>
+<p>Para generar el modelo SARIMA que pronostica con la técnica de ‘Rolling’ se hace uso de dos funciones:</p>
+<ol class="arabic simple">
+<li><p><em>sarimaconrolling</em>: Esta función recibe los valores de p(AR), q(MA) y el set de training y testing. Además se agregan los parámetros P y Q correspondientes a los autorregresivos y media móvil de la componente estacional. Para cada combinación p, q, P, Q entrena el modelo usando la serie de tiempo de entrenamiento, pronostica el test y se encarga de guardar el valor de p y q con que se obtuvo el menor valor de error. Solo que en este caso el pronóstico se realiza a partir de la técnica de rolling, haciendo un llamado a la función del punto 2.
+Esta función además considera los casos de error en que los componentes de P, Q, p y q no pueden ser iguales a la componente estacional s. Es decir, no todas las combinaciones, de hecho, pueden ser evaluadas.</p></li>
+<li><p><em>sarima_rolling</em>: Esta función calcula mediante rolling la cantidad de pasos de la serie de test que recibe. Luego de realizar cada pronóstico, esta función también reentrena el modelo para la combinación de p, q, P, Q que recibe, porque actualiza la serie de tiempo input, agregando un valor real de la serie original de la variable de análisis.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## sarima con rolling</span>
+<span class="c1">#obtener el mejor modelo</span>
+<span class="k">def</span> <span class="nf">sarimaconrolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">ts_test</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">):</span>
+    <span class="n">warnings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mae_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ts_test</span><span class="p">)</span>
+    <span class="n">best_p</span><span class="p">,</span> <span class="n">best_q</span><span class="p">,</span> <span class="n">best_Q</span><span class="p">,</span> <span class="n">best_P</span><span class="p">,</span> <span class="n">best_s</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">best_mae</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ari</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="c1">#p 1, 2, 3</span>
+        <span class="k">for</span> <span class="n">maj</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="c1">#q 1, 2, 3</span>
+            <span class="k">for</span> <span class="n">ps</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">P</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="c1">#P 1, 2</span>
+                <span class="k">for</span> <span class="n">qs</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Q</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="c1">#Q 1,2 </span>
+                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="c1">#s 2,3</span>
+                        <span class="k">if</span> <span class="n">ari</span> <span class="o">!=</span><span class="n">s</span> <span class="ow">and</span> <span class="n">maj</span> <span class="o">!=</span> <span class="n">s</span> <span class="ow">and</span> <span class="n">ps</span> <span class="o">!=</span> <span class="n">s</span> <span class="ow">and</span> <span class="n">qs</span> <span class="o">!=</span> <span class="n">s</span><span class="p">:</span>  
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combinacion&quot;</span><span class="p">,</span> <span class="n">ari</span><span class="p">,</span> <span class="n">maj</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Combinacion&quot;</span><span class="p">,</span> <span class="n">ari</span><span class="p">,</span> <span class="n">maj</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+                                <span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">statespace</span><span class="o">.</span><span class="n">SARIMAX</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="n">ari</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">maj</span><span class="p">),</span>
+                                                                <span class="n">seasonal_order</span><span class="o">=</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+                                <span class="n">y_pred</span> <span class="o">=</span> <span class="n">sarima_rolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">ts_test</span><span class="p">,</span> <span class="n">ari</span><span class="p">,</span> <span class="n">maj</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+                                <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">ts_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obtuvo un mae de&quot;</span><span class="p">,</span> <span class="n">mae</span><span class="p">)</span>
+                                <span class="n">residuals_m</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">resid</span> <span class="c1">#obtención de residuales del modelo</span>
+                                <span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span> <span class="o">=</span> <span class="n">assumptions</span><span class="p">(</span><span class="n">residuals_m</span><span class="p">)</span> <span class="c1">#análisis de los residuales</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;obtuvo este warning&quot;</span><span class="p">,</span> <span class="n">warning</span><span class="p">)</span>
+                                <span class="n">mae_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mae</span><span class="p">)</span>
+                                <span class="n">warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning</span><span class="p">)</span>
+                                
+                                <span class="k">if</span> <span class="n">mae</span> <span class="o">&lt;</span> <span class="n">best_mae</span><span class="p">:</span>
+                                    <span class="n">best_p</span><span class="p">,</span> <span class="n">best_q</span><span class="p">,</span> <span class="n">best_Q</span><span class="p">,</span> <span class="n">best_P</span><span class="p">,</span> <span class="n">best_s</span><span class="p">,</span> <span class="n">best_mae</span> <span class="o">=</span> <span class="n">ari</span><span class="p">,</span> <span class="n">maj</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">ps</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">mae</span>
+                        
+                            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modelo inválido para la combinación (</span><span class="si">{</span><span class="n">ari</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">maj</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ps</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">qs</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;el mejor mae es&quot;</span><span class="p">,</span> <span class="n">best_mae</span><span class="p">)</span>
+                        
+    <span class="k">return</span> <span class="n">best_p</span><span class="p">,</span> <span class="n">best_q</span><span class="p">,</span> <span class="n">best_Q</span><span class="p">,</span> <span class="n">best_P</span><span class="p">,</span> <span class="n">best_s</span><span class="p">,</span> <span class="n">mae_list</span><span class="p">,</span> <span class="n">warnings</span>
+
+<span class="c1">## pronosticar con rolling</span>
+<span class="k">def</span> <span class="nf">sarima_rolling</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">mae_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)):</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">statespace</span><span class="o">.</span><span class="n">SARIMAX</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="p">),</span><span class="n">seasonal_order</span><span class="o">=</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">forecast</span><span class="p">()</span>
+        <span class="n">yhat</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">yhat</span><span class="p">)</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">test</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">yhat</span><span class="p">)</span>
+        <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">test</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
+        <span class="n">mae_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mae</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Para iniciar el entrenamiento del modelo SARIMA, debemos conocer el comportamiento de la componente estacional de la serie de tiempo, para ello haremos una descomposición de nuevo y analizaremos con la prueba de Dickey-Fuller y la ACF y la PACF la componente estacional.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ts_seasonal</span> <span class="o">=</span> <span class="n">seasonal_decompose</span><span class="p">(</span><span class="n">train</span><span class="p">,</span><span class="n">period</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;additive&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">seasonal</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>El parámetro D en el modelo SARIMA está conectado con la necesidad de diferenciar la componente estacional si aplica, es por ello que debemos realizar una prueba de dickey-fuller sobre la componente estacional obtenida anteriormente. Observemos los resultados:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#H0: La serie no es estacionaria</span>
+<span class="c1">#H1: La serie es estacionaria</span>
+<span class="n">adf_result</span> <span class="o">=</span> <span class="n">adfuller</span><span class="p">(</span><span class="n">ts_seasonal</span><span class="p">,</span> <span class="n">autolag</span><span class="o">=</span><span class="s1">&#39;AIC&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie es estacionaria, el p-valor de la prueba es&quot;</span><span class="p">,</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">if</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie no es estacionaria, el p-valor de la prueba es&quot;</span><span class="p">,</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>La serie no es estacionaria, el p-valor de la prueba es 0.9585320860598399
+</pre></div>
+</div>
+</div>
+</div>
+<p>Como se observa en la prueba, es necesario diferenciar la componente estacional.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adf_result</span> <span class="o">=</span> <span class="n">adfuller</span><span class="p">(</span><span class="n">ts_seasonal</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">autolag</span><span class="o">=</span><span class="s1">&#39;AIC&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie es estacionaria, el p-valor de la prueba es&quot;</span><span class="p">,</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">if</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La serie no es estacionaria, el p-valor de la prueba es&quot;</span><span class="p">,</span> <span class="n">adf_result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>La serie es estacionaria, el p-valor de la prueba es 0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Solo fue necesaria una diferenciación para conseguir la estacionariedad de esta componente.</p>
+<p>El siguiente paso es estimar los valores de P y Q de la componente estacional, para ello se realiza el mismo proceso que en el caso de ARIMA de analizar con la ACF y la PACF la serie de tiempo, en este caso diferenciada.</p>
+<p>Con la PACF observamos un comportamiento ocurrente cada dos rezagos, sobre todo pronunciado en el rezago sexto de la serie de tiempo. Utilizaremos P = 2 en este caso para evaluar el modelo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">));</span>
+<span class="n">plot_pacf</span><span class="p">(</span><span class="n">ts_seasonal</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">());</span>
+<span class="c1">## valor de P = 2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 550x550 with 0 Axes&gt;
+</pre></div>
+</div>
+<img alt="_images/73a19c86921b26bb231fba265b71f6168750d05a053872e4c182fe5e700518b0.png" src="_images/73a19c86921b26bb231fba265b71f6168750d05a053872e4c182fe5e700518b0.png" />
+</div>
+</div>
+<p>Con la ACF observamos un comportamiento ocurrente cada dos y tres rezagos. Para evitar complejidades en los modelos presentados y disminuir el tiempo computacional de corrida de evluación de distintos modelos, utilizaremos Q = 2 en este caso para evaluar el modelo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">));</span>
+<span class="n">plot_acf</span><span class="p">(</span><span class="n">ts_seasonal</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">());</span>
+<span class="c1">#valor de q=2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 550x550 with 0 Axes&gt;
+</pre></div>
+</div>
+<img alt="_images/a4d81de4de9a828824bba233dbdb232dbd77d14ac72340bd49d0c575ec1980ab.png" src="_images/a4d81de4de9a828824bba233dbdb232dbd77d14ac72340bd49d0c575ec1980ab.png" />
+</div>
+</div>
+<p>Conociendo los parámetros p, q, P y Q, con los que evaluaremos la construcción de los modelos SARIMA podemos iniciar el testing de las distintas combinaciones y el MAE resultante. Un aspecto a considerar en el ciclo, es que ninguna variable es inicializada en cero, esto dado que es bastante evidente de que se debe tener en cuenta al menos una componente autorregresiva o de medio móvil tanto en la estacionalidad como en la serie de tiempo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#sarima con rolling</span>
+<span class="c1">#selección del mejor modelo</span>
+<span class="n">best_p</span><span class="p">,</span> <span class="n">best_q</span><span class="p">,</span> <span class="n">best_Q</span><span class="p">,</span> <span class="n">best_P</span><span class="p">,</span> <span class="n">best_s</span><span class="p">,</span> <span class="n">mae_list</span><span class="p">,</span> <span class="n">warnings</span> <span class="o">=</span> <span class="n">sarimaconrolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Este ciclo fue evaluado para dos casos, para cuando D = 0 y cuando D = 1. Se observó que los MAE resultantes aumentaron considerablemente para todos los casos cuando se diferenció la componente estacional, a diferencia de cuando se mantuvo el parámetro D = 0. Con el fin de optimizar el procesamiento de los modelos, el ciclo se evaluó para todas las combinaciones posibles solo con D = 0. Estos son los resultados que se obtuvieron para ambos casos:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">combs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;(1 1 1 1 2)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 1 1 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 1 2 2)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 1 2 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 2 1 2)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 2 1 3)&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;(1 1 2 2 2)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 2 2 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 2 1 1 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 2 1 2 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 2 2 1 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 2 2 2 3)&quot;</span><span class="p">]</span>
+<span class="n">maeD0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">15.251538393036853</span><span class="p">,</span> <span class="mf">17.353808540598877</span><span class="p">,</span> <span class="mf">14.695375844692176</span><span class="p">,</span> <span class="mf">15.27593750773718</span><span class="p">,</span> <span class="mf">13.954385435295077</span><span class="p">,</span> <span class="mf">17.08781612812365</span><span class="p">,</span>
+        <span class="mf">14.069640854145376</span><span class="p">,</span> <span class="mf">13.078782929156546</span><span class="p">,</span> <span class="mf">15.891079517448386</span><span class="p">,</span> <span class="mf">14.85722756390012</span><span class="p">,</span> <span class="mf">15.817005733206608</span><span class="p">,</span> <span class="mf">13.096205042088233</span><span class="p">]</span>
+<span class="n">warningsD0</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals aren&#39;t independent The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals aren&#39;t independent The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals aren&#39;t independent The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;The residuals aren&#39;t independent The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comb</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;(1 1 1 1 2)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 1 1 3)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 1 2 2)&quot;</span><span class="p">,</span> <span class="s2">&quot;(1 1 1 2 3)&quot;</span><span class="p">]</span>
+<span class="n">maeD1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">16.02151424449377</span><span class="p">,</span> <span class="mf">17.42859487514871</span><span class="p">,</span> <span class="mf">15.469471990912764</span><span class="p">,</span> <span class="mf">16.85052496583678</span><span class="p">]</span>
+<span class="n">warningsD1</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;The residuals do not follow a normal distribution The residuals aren&#39;t homocedastic&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;The residuals aren&#39;t independent The residuals aren&#39;t homocedastic&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_D1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;comb&#39;</span><span class="p">:</span> <span class="n">comb</span><span class="p">,</span> <span class="s1">&#39;MAE_D1&#39;</span><span class="p">:</span> <span class="n">maeD1</span><span class="p">,</span> <span class="s1">&#39;Warnings_D1&#39;</span><span class="p">:</span> <span class="n">warningsD1</span><span class="p">}</span>
+<span class="n">df_D1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_D1</span><span class="p">)</span>
+
+<span class="n">data_D0</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;comb&#39;</span><span class="p">:</span> <span class="n">combs</span><span class="p">,</span> <span class="s1">&#39;MAE_D0&#39;</span><span class="p">:</span> <span class="n">maeD0</span><span class="p">,</span> <span class="s1">&#39;Warnings_D0&#39;</span><span class="p">:</span> <span class="n">warningsD0</span><span class="p">}</span>
+<span class="n">df_D0</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data_D0</span><span class="p">)</span>
+
+<span class="n">df_combined</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_D1</span><span class="p">,</span> <span class="n">df_D0</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;comb&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
+<span class="n">df_combined</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>comb</th>
+      <th>MAE_D1</th>
+      <th>Warnings_D1</th>
+      <th>MAE_D0</th>
+      <th>Warnings_D0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>(1 1 1 1 2)</td>
+      <td>16.021514</td>
+      <td>The residuals do not follow a normal distribut...</td>
+      <td>15.251538</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>(1 1 1 1 3)</td>
+      <td>17.428595</td>
+      <td>The residuals do not follow a normal distribut...</td>
+      <td>17.353809</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>(1 1 1 2 2)</td>
+      <td>15.469472</td>
+      <td>The residuals do not follow a normal distribut...</td>
+      <td>14.695376</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>(1 1 1 2 3)</td>
+      <td>16.850525</td>
+      <td>The residuals aren't independent The residuals...</td>
+      <td>15.275938</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>(1 1 2 1 2)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>13.954385</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>(1 1 2 1 3)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>17.087816</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>(1 1 2 2 2)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>14.069641</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>(1 1 2 2 3)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>13.078783</td>
+      <td>The residuals do not follow a normal distribut...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>(1 2 1 1 3)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>15.891080</td>
+      <td>The residuals aren't independent The residuals...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>(1 2 1 2 3)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>14.857228</td>
+      <td>The residuals aren't independent The residuals...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>(1 2 2 1 3)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>15.817006</td>
+      <td>The residuals aren't independent The residuals...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>(1 2 2 2 3)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>13.096205</td>
+      <td>The residuals aren't independent The residuals...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Como se observa en la tabla, para las 4 primeras combinaciones, en todos los casos diferenciar la componente estacional aumentó el MAE de la combinación. Al igual que en el análisis anterior los modelos no cumplen todos los supuestos, existen problemas de homocedasticidad que también pueden estar afectando la normalidad de la serie. Considerando el MAE, seleccionaremos como mejor modelo, la combinación p = 1, d = 1, q = 1, P = 2, D = 0, Q = 2 y s = 3.</p>
+<p>Entrenemos el modelo con estos parámetros para guardar de nuevo los resultados de la validación más otros scores de pronóstico.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Modelo SARIMA con Rolling</span>
+
+<span class="n">sarima_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">statespace</span><span class="o">.</span><span class="n">SARIMAX</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                                            <span class="n">seasonal_order</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">residuals_m</span> <span class="o">=</span> <span class="n">sarima_model</span><span class="o">.</span><span class="n">resid</span> <span class="c1">#obtención de residuales del modelo</span>
+<span class="n">val_pred</span> <span class="o">=</span> <span class="n">sarima_rolling</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">#pronosticar validación</span>
+<span class="n">mae_v</span><span class="p">,</span> <span class="n">mape_v</span><span class="p">,</span> <span class="n">mse_v</span><span class="p">,</span> <span class="n">rmse_v</span><span class="p">,</span> <span class="n">r2_v</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">val_pred</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="c1">#scores validación</span>
+<span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span> <span class="o">=</span> <span class="n">assumptions</span><span class="p">(</span><span class="n">residuals_m</span><span class="p">)</span> <span class="c1">#análisis de los residuales</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ahora evaluemos el desempeño del modelo para pronosticar nuestro conjunto de test.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#SARIMA con Rolling</span>
+
+<span class="c1">#forecast testing con SARIMA con Rolling</span>
+
+<span class="n">arima_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">statespace</span><span class="o">.</span><span class="n">SARIMAX</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                                            <span class="n">seasonal_order</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">test_pred</span> <span class="o">=</span> <span class="n">sarima_rolling</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">#pronosticar el testing</span>
+<span class="n">mae_t</span><span class="p">,</span> <span class="n">mape_t</span><span class="p">,</span> <span class="n">mse_t</span><span class="p">,</span> <span class="n">rmse_t</span><span class="p">,</span> <span class="n">r2_t</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">test_pred</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span> <span class="c1">#scores testing</span>
+
+<span class="n">val_result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;sarima&quot;</span><span class="p">,</span> <span class="n">mape_v</span><span class="p">,</span> <span class="n">mae_v</span><span class="p">,</span> <span class="n">mse_v</span><span class="p">,</span> <span class="n">rmse_v</span><span class="p">,</span> <span class="n">r2_v</span><span class="p">,</span> <span class="n">arch_pvalue</span><span class="p">,</span> <span class="n">jb_pvalue</span><span class="p">,</span> <span class="n">ljung_box_pvalue</span><span class="p">,</span> <span class="n">warning</span><span class="p">])</span>
+<span class="n">test_result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;sarima&quot;</span><span class="p">,</span> <span class="n">mape_t</span><span class="p">,</span> <span class="n">mae_t</span><span class="p">,</span> <span class="n">mse_t</span><span class="p">,</span> <span class="n">rmse_t</span><span class="p">,</span> <span class="n">r2_t</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dfval</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">val_result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;MAPE&#39;</span><span class="p">,</span> <span class="s1">&#39;MAE&#39;</span><span class="p">,</span> <span class="s1">&#39;MSE&#39;</span><span class="p">,</span> <span class="s1">&#39;RMSE&#39;</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">,</span> <span class="s1">&#39;arch_pvalue&#39;</span><span class="p">,</span> <span class="s1">&#39;jb_pvalue&#39;</span><span class="p">,</span> <span class="s1">&#39;ljung_box_pvalue&#39;</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">])</span>
+<span class="n">dftest</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;MAPE&#39;</span><span class="p">,</span> <span class="s1">&#39;MAE&#39;</span><span class="p">,</span> <span class="s1">&#39;MSE&#39;</span><span class="p">,</span> <span class="s1">&#39;RMSE&#39;</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">])</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dftest</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;results/arimatest.xlsx&quot;</span><span class="p">)</span>
+<span class="n">dfval</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;results/arimaval.xlsx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="resultados">
+<h2>4. Resultados<a class="headerlink" href="#resultados" title="Link to this heading">#</a></h2>
+<p>En este punto ya hemos seleccionado tanto para ARIMA como SARIMA el mejor modelo con base en el MAE de pronóstico del conjunto de Validación. A comparación de los modelos de suavización tuvimos en cuenta realizar un pronóstico a partir de la técnica de Rolling, a priori se planteó que esto podía mejorar considerablemente el desempeño en el pronóstico aspecto que se comprobó durante los conjuntos de validación donde el MAE obtenido mejoró en varias unidades.</p>
+<p>Observemos a detalle el rendimiento de ambos modelos para validación y test, además de otras métricas adicionales calculadas.</p>
+<section id="resultados-en-el-entrenamiento-de-los-modelos">
+<h3>4.1 Resultados en el entrenamiento de los modelos<a class="headerlink" href="#resultados-en-el-entrenamiento-de-los-modelos" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dfval</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;(2,1,2)&#39;</span><span class="p">,</span><span class="s1">&#39;(1,1,1)(2, 0, 2, 3)&#39;</span><span class="p">]</span>
+<span class="n">dfval</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>MAPE</th>
+      <th>MAE</th>
+      <th>MSE</th>
+      <th>RMSE</th>
+      <th>R2</th>
+      <th>arch_pvalue</th>
+      <th>jb_pvalue</th>
+      <th>ljung_box_pvalue</th>
+      <th>warning</th>
+      <th>parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>arima</td>
+      <td>inf</td>
+      <td>15.051051</td>
+      <td>323.407261</td>
+      <td>17.983527</td>
+      <td>0.247404</td>
+      <td>8.338575e-08</td>
+      <td>4.252854e-22</td>
+      <td>0.461667</td>
+      <td>The residuals do not follow a normal distribu...</td>
+      <td>(2,1,2)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>sarima</td>
+      <td>inf</td>
+      <td>13.078783</td>
+      <td>247.766921</td>
+      <td>15.740614</td>
+      <td>0.423426</td>
+      <td>2.492835e-15</td>
+      <td>8.061886e-41</td>
+      <td>0.171245</td>
+      <td>The residuals do not follow a normal distribu...</td>
+      <td>(1,1,1)(2, 0, 2, 3)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Key insights</strong></p>
+<ol class="arabic simple">
+<li><p>Claramente podemos observar que el R2 mejoró bastante con respecto a los modelos de suavización, que el mayor valor que alcanzaron fue de -0.09. Este tipo de modelos empieza a capturar de mejor forma la variabilidad de los datos, además los patrones de estacionalidad y tendencia de la serie. Sobre todo el modelo SARIMA que alcanzó un 42% de R2.</p></li>
+<li><p>SARIMA de hecho presentó los valores de error más bajos hasta el momento alcanzando un valor de 13 cargas como MAE, esto puede deberse a la capacidad de modelar el componente estacional que tiene la serie diaria.</p></li>
+<li><p>Al menos en el entrenamiento, ambos modelos tuvieron mucho mejor desempeño que las suavizaciones del capítulo anterior.</p></li>
+<li><p>Aunque en ambos casos se utilizó p, q de rango 3, en SARIMA los valores de p, q se mantuvieron en un rezago, mientras que ARIMA obtuvo su mejor modelo con dos en cada caso.</p></li>
+<li><p>El componente estacional de SARIMA fue 3, mientras que el de Holt-Winters fue 4, se puede analizar la posibilidad de aumentar el límite del ciclo para conocer si estacionalidades de mayor orden permiten mejorar el desempeño del modelo.</p></li>
+<li><p>Ninguno de los dos modelos cumple los supuestos de normalidad y heterocedasticidad lo que pueden generar problemas posteriores en el pronóstico.</p></li>
+<li><p>En este caso ambos modelos cumplen el supuesto de independencia.</p></li>
+</ol>
+<p>A continuación comparemos si en el test, los resultados mantienen al modelo SARIMA como mejor modelo.</p>
+</section>
+<section id="resultados-en-el-conjunto-de-test">
+<h3>4.2 Resultados en el conjunto de test<a class="headerlink" href="#resultados-en-el-conjunto-de-test" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dftest</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;(2,1,2)&#39;</span><span class="p">,</span><span class="s1">&#39;(1,1,1)(2, 0, 2, 3)&#39;</span><span class="p">]</span>
+<span class="n">dftest</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>MAPE</th>
+      <th>MAE</th>
+      <th>MSE</th>
+      <th>RMSE</th>
+      <th>R2</th>
+      <th>parameters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>arima</td>
+      <td>inf</td>
+      <td>14.242388</td>
+      <td>273.714722</td>
+      <td>16.544326</td>
+      <td>0.239715</td>
+      <td>(2,1,2)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>sarima</td>
+      <td>inf</td>
+      <td>16.311696</td>
+      <td>354.120036</td>
+      <td>18.818077</td>
+      <td>0.016377</td>
+      <td>(1,1,1)(2, 0, 2, 3)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p><strong>Key insights</strong></p>
+<ol class="arabic simple">
+<li><p>Sorprendentemente el modelo SARIMA bajó bastante su desempeño al pronosticar el testing, de hecho de tener un 42% de R2 disminuyó a casi 0%. Esto puede ser un índice de sobreajuste del modelo, se debe evaluar a profundidad.</p></li>
+<li><p>ARIMA mejoró sus numeros de MAE, MSE y RMSE, durante el pronóstico del test y hasta ahora es el valor de MAE más bajo captado durante el testing de cargas.</p></li>
+<li><p>La búsqueda de modelar la estacionalidad aún no da resultado ni con SARIMA ni con Holt-Winters, la ausencia de homocedasticidad puede generar fallas en la precisión del pronóstico.</p></li>
+</ol>
+</section>
+<section id="seleccion-del-mejor-modelo">
+<h3>4.3 Selección del mejor modelo<a class="headerlink" href="#seleccion-del-mejor-modelo" title="Link to this heading">#</a></h3>
+<p>En las técnicas de ARIMA y SARIMA podemos observar que en definitiva la técnica de Rolling beneficia el pronóstico del modelo. A pesar de que SARIMA presentó un buen desempeño durante la validación no lo mantuvo en el test, probablemente relacionado con sobreajuste y ARIMA solo a partir del análisis de tendencia alcanzó el mejor MAE hasta el momento.</p>
+<p>En este estudio no se mostraron las opciones de transformación de datos, pero testeos preliminares de la autora corroboraron que incluso con transformadas de Box-cox y logarítmicas, los datos no cumplían el supuesto de normalidad ni heterocedasticidad.</p>
+<p>Construyamos de nuevo el modelo ARIMA para graficar su pronóstico.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">train</span><span class="p">,</span><span class="n">val</span><span class="p">])</span> <span class="c1">#unir validación con training</span>
+<span class="n">arima_model</span> <span class="o">=</span> <span class="n">smtsa</span><span class="o">.</span><span class="n">ARIMA</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">test_pred_normal</span> <span class="o">=</span> <span class="n">arima_model</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+<span class="n">test_pred_roll</span> <span class="o">=</span> <span class="n">arima_rolling</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">#pronosticar el testing</span>
+<span class="n">mae_t</span><span class="p">,</span> <span class="n">mape_t</span><span class="p">,</span> <span class="n">mse_t</span><span class="p">,</span> <span class="n">rmse_t</span><span class="p">,</span> <span class="n">r2_t</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">test_pred_roll</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span> <span class="c1">#scores testing</span>
+<span class="n">mae_tn</span><span class="p">,</span> <span class="n">mape_tn</span><span class="p">,</span> <span class="n">mse_tn</span><span class="p">,</span> <span class="n">rmse_tn</span><span class="p">,</span> <span class="n">r2_tn</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">test_pred_normal</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span> <span class="c1">#scores testing</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\kgome\anaconda3\envs\myenv\lib\site-packages\statsmodels\tsa\statespace\sarimax.py:978: UserWarning: Non-invertible starting MA parameters found. Using zeros as starting parameters.
+  warn(&#39;Non-invertible starting MA parameters found.&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cargas diarias transportadas&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">test_pred_normal</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pronóstico Forecast&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">test_pred_roll</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pronóstico Rolling&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Comparación de Pronóstico Normal y Rolling con ARIMA&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Fecha&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Cargas transportadas&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/fe78d3be4c2aa026d0a1674d27b57df961789b61dd8268894ea9310c6f361a79.png" src="_images/fe78d3be4c2aa026d0a1674d27b57df961789b61dd8268894ea9310c6f361a79.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Normal&#39;</span><span class="p">,</span> <span class="s1">&#39;Rolling&#39;</span><span class="p">]</span>
+<span class="n">maes</span> <span class="o">=</span> <span class="p">[</span><span class="n">mae_tn</span><span class="p">,</span> <span class="n">mae_t</span><span class="p">]</span>
+<span class="n">mapes</span> <span class="o">=</span> <span class="p">[</span><span class="n">mape_tn</span><span class="p">,</span> <span class="n">mape_t</span><span class="p">]</span>
+<span class="n">mses</span> <span class="o">=</span> <span class="p">[</span><span class="n">mse_tn</span><span class="p">,</span> <span class="n">mse_t</span><span class="p">]</span>
+<span class="n">rmses</span> <span class="o">=</span> <span class="p">[</span><span class="n">rmse_tn</span><span class="p">,</span> <span class="n">rmse_t</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">maes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;MAE&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">mapes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;MAPE&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">mses</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;MSE&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">rmses</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">])</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;RMSE&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Comparación de Métricas de Error en Testing&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a4920daae5faf1b12bd60311799d781ada7fd9f10195b3b647576d5586207b5b.png" src="_images/a4920daae5faf1b12bd60311799d781ada7fd9f10195b3b647576d5586207b5b.png" />
+</div>
+</div>
+<p>Como podemos observar en este gráfico de barras el modelo de Rolling tiene mejor desempeño en las métricas, comprobando una vez más que esta técnica soporta la heterocedasticidad en las predicciones.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="smoothing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Modelos de Suavización Exponencial</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="nn.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Modelos de redes neuronales</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arima">1. ARIMA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sarima">2. SARIMA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados">4. Resultados</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-en-el-entrenamiento-de-los-modelos">4.1 Resultados en el entrenamiento de los modelos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resultados-en-el-conjunto-de-test">4.2 Resultados en el conjunto de test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seleccion-del-mejor-modelo">4.3 Selección del mejor modelo</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Karen Gomez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
