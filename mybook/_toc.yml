@@ -7,3 +7,6 @@ chapters:
 - file: data_prep
 - file: eda
 - file: smoothing
+- file: arima
+- file: nn
+- file: improved_model
